@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<div>
+    {% for class in object_list %}
+       <h2><a href="{% url 'class-student-list' class.pk %}">{{ class.class_name }}</a></h2>
+       <p>{{ class.student_set.count }} students</p>
+       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-{{ class.pk }}">
+            Delete
+        </button>
+        <a type="button" class="btn btn-info" href="{% url 'class-name-edit' class.pk %}">
+          Edit
+        </a>
+       <!-- Modal content -->
+       <div class="modal fade" id="confirmDeleteModal-{{ class.pk }}" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <form action="{% url 'class-delete' class.pk %}" method="post">{% csrf_token %}
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete class "{{ class.class_name }}"?
+              </div>
+              <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nevermind</button>
+                <button type="submit" class="btn btn-danger">Confirm</button>
+              
+              </div>
+          </form>
+          </div>
+        </div>
+      </div>
+        <!-- End of Modal content -->  
+       {% endfor %}
+      <!-- For organization -->
+       <br> <br>
+       <!-- For organization -->
+    <a class="btn btn-primary" href="{% url 'class-create' %}">Add class</a>
+</div>
+{% endblock content %}

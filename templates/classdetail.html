@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a class="btn btn-primary" href="{% url 'class-student-create' class.pk %}">Add student</a>
+<h1>{{ class.class_name }}</h1>
+{% for student in object.student_set.all %}
+    <p>{{ student.student_name }}</p>
+    <p>{{ student.tickets }}</p>
+    <a class="btn btn-secondary" href="{% url 'class-ticket-add' student.id %}">+</a>
+    <a class="btn btn-secondary" href="{% url 'class-ticket-delete' student.id %}">-</a> <br> <br>
+    <form action="{% url 'class-student-delete' student.pk %}" method="post"> {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Remove</button>
+    </form>
+{% endfor %}
+
+{% endblock %}
