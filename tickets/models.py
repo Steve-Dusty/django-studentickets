@@ -7,7 +7,7 @@ from django.urls import reverse
 
 class Class(models.Model):
     teacher = models.ForeignKey(
-        'auth.User', on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     class_name = models.CharField(max_length=50)
 
     class Meta:
