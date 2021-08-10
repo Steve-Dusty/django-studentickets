@@ -2,6 +2,9 @@
 
 {% block content %}
 <h1>Dashboard</h1>
+{% if user.is_authenticated %}
+  <p>Hello, {{ user.username }}!</p>
+{% endif %}
 <div>
     {% for class in object_list %}
        <h2><a href="{% url 'class-student-list' class.pk %}">{{ class.class_name }}</a></h2>

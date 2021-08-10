@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -10,17 +12,21 @@ class HomePageView(TemplateView):
     template_name = "home.html"
 
 
-class ClassListView(ListView):
+class ClassListView(LoginRequiredMixin, ListView):
     model = Class
     template_name = "dashboard.html"
+    login_url = '/login/'
+
+    def get_queryset(self):
+        return self.request.user.class_set.all()
 
 
-class ClassDetailView(DetailView):
+class ClassDetailView(LoginRequiredMixin, DetailView):
     model = Class
     template_name = "classdetail.html"
 
 
-class ClassCreateView(CreateView):
+class ClassCreateView(LoginRequiredMixin, CreateView):
     model = Class
     template_name = "createclass.html"
     fields = ['class_name']
@@ -30,12 +36,12 @@ class ClassCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ClassDeleteView(DeleteView):
+class ClassDeleteView(LoginRequiredMixin, DeleteView):
     model = Class
     success_url = "/dashboard"
 
 
-class ClassStudentCreateView(CreateView):
+class ClassStudentCreateView(LoginRequiredMixin, CreateView):
     model = Student
     template_name = "addstudent.html"
     fields = ['student_name']
@@ -48,20 +54,21 @@ class ClassStudentCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ClassStudentDeleteView(DeleteView):
+class ClassStudentDeleteView(LoginRequiredMixin, DeleteView):
     model = Student
 
     def get_success_url(self):
         return reverse('class-student-list', kwargs={'pk': self.object.class_name_id})
 
 
-class ClassNameEditView(UpdateView):
+class ClassNameEditView(LoginRequiredMixin, UpdateView):
     model = Class
     template_name = "editclassname.html"
     fields = ['class_name']
     success_url = "/dashboard"
 
 
+@login_required
 def add_ticket(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
     Student.objects.filter(
@@ -69,6 +76,7 @@ def add_ticket(request, student_id):
     return redirect('class-student-list', pk=student.class_name_id)
 
 
+@login_required
 def delete_ticket(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
     Student.objects.filter(
