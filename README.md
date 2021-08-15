@@ -3,10 +3,10 @@ Studentickets is a reward system that lets teachers give students "tickets" inst
 
 
 ## Some paths so you can navigate around because I didn't write much CSS
-/login
-/register
-/logout
-/dashboard
+/login <br /> 
+/register <br /> 
+/logout <br /> 
+/dashboard <br /> 
 
 ## Why didn't you add CSS?
 I wrote this to practice Django
